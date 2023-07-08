@@ -1,0 +1,5 @@
+TO INSTALL THE react
+
+#1 run npx create-react-app ./ in root directory to install bootstrapped react app.
+
+#2 install all dependencies in package.json file using command: npm install --legacy-peer-deps or npm i --force.
