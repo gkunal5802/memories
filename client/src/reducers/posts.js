@@ -1,9 +1,13 @@
-const posts = (posts = [], actions) => {
-  switch (actions.type) {
+const posts = (posts = [], action) => {
+  switch (action.type) {
+    case "UPDATE":
+      return posts.map((post) =>
+        post._id === action.payload._id ? action.payload : post
+      );
     case "FETCH_ALL":
-      return actions.payload;
+      return action.payload;
     case "CREATE":
-      return [...posts, actions.payload];
+      return [...posts, action.payload];
     default:
       return posts;
   }

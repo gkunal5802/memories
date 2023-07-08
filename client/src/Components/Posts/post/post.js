@@ -15,7 +15,7 @@ import moment from "moment";
 
 import useStyles from "./styles";
 
-const Post = ({ post }) => {
+const Post = ({ post, setCurrentId }) => {
   const classes = useStyles();
   return (
     <Card className={classes.card}>
@@ -31,7 +31,13 @@ const Post = ({ post }) => {
         </Typography>
       </div>
       <div className={classes.overlay2}>
-        <Button style={{ color: "white" }} size="small" onClick={() => {}}>
+        <Button
+          style={{ color: "white" }}
+          size="small"
+          onClick={() => {
+            setCurrentId(post._id);
+          }}
+        >
           <MoreHorizIcon fontSize="medium" />
         </Button>
       </div>
@@ -41,8 +47,11 @@ const Post = ({ post }) => {
         </Typography>
       </div>
 
+      <Typography variant="h5" className={classes.title} gutterBottom>
+        {post.title}
+      </Typography>
       <CardContent>
-        <Typography variant="h5" className={classes.title} gutterBottom>
+        <Typography variant="h5" gutterBottom>
           {post.message}
         </Typography>
       </CardContent>
