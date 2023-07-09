@@ -9,7 +9,7 @@ export const getPosts = async (req, res) => {
 
     res.status(200).json(postsMessages);
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json({ message: error });
   }
 };
 
@@ -22,7 +22,7 @@ export const createPost = async (req, res) => {
     // www.restapitutorial.com/httpstatuscodes.html
     https: res.status(201).json(newPost); // 201 successfully created
   } catch (error) {
-    res.status(409).json({ message: error.message });
+    res.status(409).json({ message: error });
   }
 };
 
