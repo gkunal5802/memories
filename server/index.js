@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 import postsRoutes from "./routes/postsRoute.js";
+import usersRoutes from "./routes/usersRoute.js";
 const app = express();
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 app.use("/posts", postsRoutes);
+app.use("/user", usersRoutes);
 
 // Heroku will help to assign port after deployment
 const PORT = process.env.PORT || 5000;

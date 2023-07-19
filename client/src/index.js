@@ -14,7 +14,6 @@ ReactDom.render(
     <GoogleOAuthProvider clientId="26497861188-amnd9v0p656k5b8m4d362hms301h02q5.apps.googleusercontent.com">
       <App />
     </GoogleOAuthProvider>
-    ;{/* <App /> */}
   </Provider>,
   document.getElementById("root")
 );
