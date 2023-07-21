@@ -3,6 +3,7 @@ import { AppBar, Avatar, Button, Typography, Toolbar } from "@material-ui/core";
 
 import { Link, useHistory, useLocation } from "react-router-dom";
 
+// import decode from "jwt-decode";
 import memories from "../../images/memories.png";
 import useStyles from "./styles";
 import { useDispatch } from "react-redux";
@@ -14,7 +15,7 @@ const NavBar = () => {
   const location = useLocation();
 
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
-  // console.log(user?.result[0].data);
+
   console.log(user);
 
   const logout = () => {
@@ -26,8 +27,6 @@ const NavBar = () => {
   };
   useEffect(() => {
     // const token = user?.token;
-
-    // JWT
 
     setUser(JSON.parse(localStorage.getItem("profile")));
   }, [location]);
@@ -57,13 +56,13 @@ const NavBar = () => {
             <div className={classes.profile}>
               <Avatar
                 className={classes.purple}
-                alt={user.result[0].data.name}
-                src={user.result[0].data.picture}
+                alt={user.result.name}
+                src={user.result.picture}
               >
-                {user.result[0].data.name.charAt(0)}
+                {user.result.name.charAt(0)}
               </Avatar>
               <Typography className={classes.userName} variant="h6">
-                {user.result[0].data.name}
+                {user.result.name}
               </Typography>
               <Button
                 className={classes.logout}

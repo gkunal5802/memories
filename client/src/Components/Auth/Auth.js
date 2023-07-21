@@ -26,6 +26,7 @@ const initialState = {
   password: "",
   confirmPassword: "",
 };
+
 const Auth = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -39,22 +40,20 @@ const Auth = () => {
 
   const switchMode = () => {
     setIsSignUp((previsSignUp) => !previsSignUp);
-    handleShowPassword(false);
+    setShowPassword(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    console.log(formData);
-  };
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
 
     if (isSignUp) {
       dispatch(signup(formData, history));
     } else {
       dispatch(signin(formData, history));
     }
+  };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const login = useGoogleLogin({

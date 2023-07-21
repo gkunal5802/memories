@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import User from "../models/userModel";
+import User from "../models/userModel.js";
 
 export const signin = async (req, res) => {
   const { email, password } = req.body;
@@ -11,7 +11,10 @@ export const signin = async (req, res) => {
     if (!existingUser)
       return res.status(404).json({ message: "User doesn't exist" });
 
-    const isPasswordCorrect = bcrypt.compare(password, existingUser.password);
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
 
     if (!isPasswordCorrect)
       return res.status(400).json({ message: "Invalid Credentials" });
@@ -19,7 +22,7 @@ export const signin = async (req, res) => {
     const token = jwt.sign(
       { email: existingUser.email, id: existingUser._id },
       "test",
-      "1h"
+      { expiresIn: "1h" }
     );
 
     res.status(200).json({ result: existingUser, token });
@@ -40,7 +43,7 @@ export const signup = async (req, res) => {
     if (password !== confirmPassword)
       return res.status(400).json({ message: "Passwords do not match!" });
 
-    const hashedPassword = bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const newUser = await User.create({
       email,
@@ -48,11 +51,9 @@ export const signup = async (req, res) => {
       name: `${firstName} ${lastName}`,
     });
 
-    const token = jwt.sign(
-      { email: result.email, id: newUser._id },
-      "test",
-      "1h"
-    );
+    const token = jwt.sign({ email: newUser.email, id: newUser._id }, "test", {
+      expiresIn: "1h",
+    });
 
     res.status(200).json({ result: newUser, token });
   } catch (error) {
