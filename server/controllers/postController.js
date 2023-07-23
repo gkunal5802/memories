@@ -2,10 +2,21 @@ import Posts from "../models/postsModel.js";
 import mongoose from "mongoose";
 
 export const getPosts = async (req, res) => {
+  const { page } = req.query;
   try {
-    const postsMessages = await Posts.find();
+    const LIMIT = 8;
+    const startIndex = (Number(page) - 1) * LIMIT;
+    const total = await Posts.countDocuments({});
+    const allPosts = await Posts.find()
+      .sort({ _id: -1 })
+      .limit(LIMIT)
+      .skip(startIndex);
 
-    res.status(200).json(postsMessages);
+    res.status(200).json({
+      data: allPosts,
+      currentPage: page,
+      numberOfPages: Math.ceil(total / LIMIT),
+    });
   } catch (error) {
     res.status(404).json({ message: error });
   }

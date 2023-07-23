@@ -55,9 +55,7 @@ const Home = () => {
   const handleDelete = (tagToDelete) => {
     return setTags(tags.filter((tag) => tag !== tagToDelete));
   };
-  useEffect(() => {
-    dispatch(getPosts());
-  }, [currentId, dispatch]);
+
   return (
     <Grow in>
       <Container maxWidth="xl">
@@ -106,9 +104,11 @@ const Home = () => {
               </Button>
             </AppBar>
             <Form setCurrentId={setCurrentId} currentId={currentId} />
-            <Paper elevation={6}>
-              <Paginate />
-            </Paper>
+            {!searchQuery && !tags.length && (
+              <Paper elevation={6}>
+                <Paginate page={page} className={classes.pagination} />
+              </Paper>
+            )}
           </Grid>
         </Grid>
       </Container>

@@ -10,7 +10,6 @@ import {
 
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ThumbUpAltOutlined from "@material-ui/icons/ThumbUpOutlined";
-// import Likes from "../../Likes/likes.js";
 import DeleteIcon from "@material-ui/icons/Delete";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import moment from "moment";
@@ -54,7 +53,7 @@ const Post = ({ post, setCurrentId }) => {
   };
 
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} raised elevation={6}>
       <CardMedia
         image={
           post.selectedFile ||
