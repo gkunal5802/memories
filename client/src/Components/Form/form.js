@@ -3,6 +3,7 @@ import { Typography, TextField, Button, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
 import useStyles from "./styles";
+import { useHistory } from "react-router-dom";
 
 import { createPost, updatePost } from "../../actions/posts";
 
@@ -15,8 +16,9 @@ const Form = ({ currentId, setCurrentId }) => {
   });
 
   const dispatch = useDispatch();
+  const history = useHistory();
   const post = useSelector((state) =>
-    currentId ? state.posts.find((p) => p._id === currentId) : null
+    currentId ? state.posts.posts.find((p) => p._id === currentId) : null
   );
 
   const user = JSON.parse(localStorage.getItem("profile"));
@@ -34,7 +36,7 @@ const Form = ({ currentId, setCurrentId }) => {
       );
       clear();
     } else {
-      dispatch(createPost({ ...postData, name: user?.result?.name }));
+      dispatch(createPost({ ...postData, name: user?.result?.name }, history));
       clear();
     }
   };

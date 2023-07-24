@@ -1,6 +1,19 @@
 import Posts from "../models/postsModel.js";
 import mongoose from "mongoose";
 
+export const getPost = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const post = await Posts.findById(id);
+
+    if (!post) return res.status(404).json({ message: "No post found" });
+
+    res.status(200).json({ data: post });
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const getPosts = async (req, res) => {
   const { page } = req.query;
   try {

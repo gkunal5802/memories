@@ -1,5 +1,6 @@
 import {
   FETCH_ALL,
+  FETCH_POST,
   FETCH_BY_SEARCH,
   START_LOADING,
   END_LOADING,
@@ -31,7 +32,13 @@ const posts = (state = [{ isLoading: true, posts: [] }], action) => {
     case FETCH_BY_SEARCH:
       return {
         ...state,
-        posts: action.payload,
+        posts: action.payload.data,
+      };
+
+    case FETCH_POST:
+      return {
+        ...state,
+        post: action.payload,
       };
 
     case DELETE:

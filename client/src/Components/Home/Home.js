@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Grow,
@@ -90,8 +90,8 @@ const Home = () => {
                 style={{ margin: "10px 0" }}
                 variant="outlined"
                 value={tags}
-                onAdd={handleAdd}
-                onDelete={handleDelete}
+                onAdd={(chip) => handleAdd(chip)}
+                onDelete={(chip) => handleDelete(chip)}
                 label="Search Tags"
               />
               <Button
