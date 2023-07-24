@@ -15,7 +15,7 @@ import Paginate from "../pagination.jsx";
 import Posts from "../Posts/posts.js";
 import Form from "../Form/form.js";
 import useStyles from "./styles";
-import { getPosts, getPostsBySearch } from "../../actions/posts";
+import { getPostsBySearch } from "../../actions/posts";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -105,8 +105,8 @@ const Home = () => {
             </AppBar>
             <Form setCurrentId={setCurrentId} currentId={currentId} />
             {!searchQuery && !tags.length && (
-              <Paper elevation={6}>
-                <Paginate page={page} className={classes.pagination} />
+              <Paper elevation={6} className={classes.pagination}>
+                <Paginate page={page} />
               </Paper>
             )}
           </Grid>

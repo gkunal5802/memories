@@ -47,7 +47,7 @@ const posts = (state = [{ isLoading: true, posts: [] }], action) => {
         ),
       };
     case CREATE:
-      return { ...state, posts: [state.posts, action.payload] };
+      return { ...state, posts: [action.payload, ...state.posts] };
 
     default:
       return state;

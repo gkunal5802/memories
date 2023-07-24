@@ -14,7 +14,7 @@ export const getPosts = async (req, res) => {
 
     res.status(200).json({
       data: allPosts,
-      currentPage: page,
+      currentPage: Number(page),
       numberOfPages: Math.ceil(total / LIMIT),
     });
   } catch (error) {
