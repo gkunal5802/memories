@@ -43,13 +43,10 @@ const Post = () => {
     );
   }
   if (!post) return "NO POSTS FOUND!!!";
-  console.log(post);
 
-  console.log(posts);
   const recommendedPosts = posts.filter((_id) => _id !== post._id);
   const openPost = (_id) => history.push(`/posts/${_id}`);
 
-  console.log(recommendedPosts);
   return (
     <Paper style={{ padding: "20px", borderRadius: "15px" }} elevation={6}>
       <div className={classes.card}>
