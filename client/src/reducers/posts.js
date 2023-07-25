@@ -7,6 +7,7 @@ import {
   CREATE,
   UPDATE,
   DELETE,
+  COMMENT,
 } from "./../constants/actionTypes";
 
 const posts = (state = [{ isLoading: true, posts: [] }], action) => {
@@ -40,7 +41,17 @@ const posts = (state = [{ isLoading: true, posts: [] }], action) => {
         ...state,
         post: action.payload,
       };
+    case COMMENT:
+      return {
+        ...state,
+        posts: state.posts.map((post) => {
+          if (post._id === action.payload._id) {
+            return action.payload;
+          }
 
+          return post;
+        }),
+      };
     case DELETE:
       return {
         ...state,

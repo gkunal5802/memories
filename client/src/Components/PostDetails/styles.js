@@ -4,12 +4,14 @@ export default makeStyles((theme) => ({
   media: {
     borderRadius: "20px",
     objectFit: "cover",
-    width: "100%",
+    width: "70%",
     maxHeight: "600px",
   },
   card: {
     display: "flex",
+    justifyItems: "space-between",
     width: "100%",
+    // justifyContent: "space-between",
     [theme.breakpoints.down("sm")]: {
       flexWrap: "wrap",
       flexDirection: "column",

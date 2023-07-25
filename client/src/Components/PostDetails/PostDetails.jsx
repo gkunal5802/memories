@@ -11,6 +11,7 @@ import { useParams, useHistory } from "react-router-dom";
 
 import { getPost, getPostsBySearch } from "../../actions/posts";
 import useStyles from "./styles";
+import CommentSection from "./commentSection";
 
 const Post = () => {
   const { post, posts, isLoading } = useSelector((state) => state.posts);
@@ -34,9 +35,6 @@ const Post = () => {
   //   }
   // }, [dispatch, post]);
 
-  if (!post) return "NO POSTS FOUND!!!";
-
-  console.log(post);
   if (isLoading) {
     return (
       <Paper elevation={6} className={classes.loadingPaper}>
@@ -44,10 +42,12 @@ const Post = () => {
       </Paper>
     );
   }
+  if (!post) return "NO POSTS FOUND!!!";
+  console.log(post);
 
   console.log(posts);
-  const openPost = (_id) => history.push(`/posts/${_id}`);
   const recommendedPosts = posts.filter((_id) => _id !== post._id);
+  const openPost = (_id) => history.push(`/posts/${_id}`);
 
   console.log(recommendedPosts);
   return (
@@ -63,7 +63,7 @@ const Post = () => {
             color="textSecondary"
             component="h2"
           >
-            {post.tags}
+            #{post.tags.join("#")}
           </Typography>
           <Typography gutterBottom variant="body1" component="p">
             {post.message}
@@ -80,9 +80,7 @@ const Post = () => {
             <strong>Realtime Chat - coming soon!</strong>
           </Typography>
           <Divider style={{ margin: "20px 0" }} />
-          <Typography variant="body1">
-            <strong>Comment Section - coming soon!</strong>
-          </Typography>
+          <CommentSection post={post} />
           <Divider style={{ margin: "20px 0" }} />
         </div>
         <div className={classes.imageSection}>
@@ -97,9 +95,9 @@ const Post = () => {
         </div>
       </div>
       {recommendedPosts.length && (
-        <div className={classes.sectin}>
+        <div className={classes.section}>
           <Typography gutterBottom variant="h5">
-            You might also like:{" "}
+            You might also like:
           </Typography>
           <Divider />
           <div className={classes.recommendedPosts}>
