@@ -7,11 +7,11 @@ import {
 } from "@material-ui/core/";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, Link } from "react-router-dom";
 
 import { getPost, getPostsBySearch } from "../../actions/posts";
-import useStyles from "./styles";
 import CommentSection from "./commentSection";
+import useStyles from "./styles";
 
 const Post = () => {
   const { post, posts, isLoading } = useSelector((state) => state.posts);
@@ -24,16 +24,17 @@ const Post = () => {
     dispatch(getPost(id));
   }, [dispatch, id]);
 
-  // useEffect(() => {
-  //   if (post) {
-  //     dispatch(
-  //       getPostsBySearch({
-  //         search: "none",
-  //         tags: post?.tags.join(","),
-  //       })
-  //     );
-  //   }
-  // }, [dispatch, post]);
+  useEffect(() => {
+    if (post) {
+      dispatch(
+        getPostsBySearch({ search: "none", tags: post?.tags.join(",") })
+      );
+    }
+  }, [dispatch, post]);
+
+  if (!post) return null;
+
+  const openPost = (_id) => history.push(`/posts/${_id}`);
 
   if (isLoading) {
     return (
@@ -42,10 +43,8 @@ const Post = () => {
       </Paper>
     );
   }
-  if (!post) return "NO POSTS FOUND!!!";
 
-  const recommendedPosts = posts.filter((_id) => _id !== post._id);
-  const openPost = (_id) => history.push(`/posts/${_id}`);
+  const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
 
   return (
     <Paper style={{ padding: "20px", borderRadius: "15px" }} elevation={6}>
@@ -60,14 +59,27 @@ const Post = () => {
             color="textSecondary"
             component="h2"
           >
-            #{post.tags.join("#")}
+            {post.tags.map((tag, i) => (
+              <Link
+                key={i}
+                to={`/tags/${tag}`}
+                style={{ textDecoration: "none", color: "#3f51b5" }}
+              >
+                {` #${tag} `}
+              </Link>
+            ))}
           </Typography>
           <Typography gutterBottom variant="body1" component="p">
             {post.message}
           </Typography>
           <Typography variant="h6">
             Created by:
-            {post.name}
+            <Link
+              to={`/creators/${post.name}`}
+              style={{ textDecoration: "none", color: "#3f51b5" }}
+            >
+              {` ${post.name}`}
+            </Link>
           </Typography>
           <Typography variant="body1">
             {moment(post.createdAt).fromNow()}
@@ -91,7 +103,7 @@ const Post = () => {
           />
         </div>
       </div>
-      {recommendedPosts.length && (
+      {!!recommendedPosts.length && (
         <div className={classes.section}>
           <Typography gutterBottom variant="h5">
             You might also like:
@@ -117,7 +129,7 @@ const Post = () => {
                   <Typography gutterBottom variant="subtitle1">
                     Likes: {likes.length}
                   </Typography>
-                  <img src={selectedFile} width="200px" alt="PostImg" />
+                  <img src={selectedFile} width="200px" alt="postImg" />
                 </div>
               )
             )}

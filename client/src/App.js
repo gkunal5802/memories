@@ -1,22 +1,29 @@
 import React from "react";
 import { Container } from "@material-ui/core";
-import NavBar from "./Components/navBar/navBar";
-import PostDetails from "./Components/PostDetails/PostDetails";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
-import Home from "./Components/Home/Home";
-import Auth from "./Components/Auth/Auth";
+
+import PostDetails from "./components/PostDetails/PostDetails";
+import Navbar from "./components/Navbar/navBar";
+import Home from "./components/Home/Home";
+import Auth from "./components/Auth/Auth";
+import CreatorOrTag from "./components/CreatorOrTag/CreatorOrTag";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("profile"));
+
   return (
     <BrowserRouter>
       <Container maxWidth="xl">
-        <NavBar />
+        <Navbar />
         <Switch>
           <Route path="/" exact component={() => <Redirect to="/posts" />} />
           <Route path="/posts" exact component={Home} />
           <Route path="/posts/search" exact component={Home} />
           <Route path="/posts/:id" exact component={PostDetails} />
+          <Route
+            path={["/creators/:name", "/tags/:name"]}
+            component={CreatorOrTag}
+          />
           <Route
             path="/auth"
             exact

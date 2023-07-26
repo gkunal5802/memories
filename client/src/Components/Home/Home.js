@@ -3,37 +3,39 @@ import {
   Container,
   Grow,
   Grid,
-  Paper,
   AppBar,
   TextField,
   Button,
+  Paper,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import ChipInput from "material-ui-chip-input";
-import Paginate from "../pagination.jsx";
-import Posts from "../Posts/posts.js";
-import Form from "../Form/form.js";
-import useStyles from "./styles";
+
 import { getPostsBySearch } from "../../actions/posts";
+import Posts from "../Posts/posts";
+import Form from "../Form/form";
+import Pagination from "../pagination";
+import useStyles from "./styles";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 const Home = () => {
-  const [currentId, setCurrentId] = useState(null);
-  const [tags, setTags] = useState([]);
-  const [search, setSearch] = useState("");
   const classes = useStyles();
-  const dispatch = useDispatch();
   const query = useQuery();
-  const history = useHistory();
   const page = query.get("page") || 1;
   const searchQuery = query.get("searchQuery");
 
+  const [currentId, setCurrentId] = useState(0);
+  const dispatch = useDispatch();
+
+  const [search, setSearch] = useState("");
+  const [tags, setTags] = useState([]);
+  const history = useHistory();
+
   const searchPost = () => {
     if (search.trim() || tags) {
-      // dispatch -> fetch search post
       dispatch(getPostsBySearch({ search, tags: tags.join(",") }));
       history.push(
         `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(",")}`
@@ -42,19 +44,17 @@ const Home = () => {
       history.push("/");
     }
   };
+
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
       searchPost();
     }
   };
 
-  const handleAdd = (tag) => {
-    return setTags([...tags, tag]);
-  };
+  const handleAddChip = (tag) => setTags([...tags, tag]);
 
-  const handleDelete = (tagToDelete) => {
-    return setTags(tags.filter((tag) => tag !== tagToDelete));
-  };
+  const handleDeleteChip = (chipToDelete) =>
+    setTags(tags.filter((tag) => tag !== chipToDelete));
 
   return (
     <Grow in>
@@ -69,44 +69,42 @@ const Home = () => {
           <Grid item xs={12} sm={6} md={9}>
             <Posts setCurrentId={setCurrentId} />
           </Grid>
-          <Grid item xs={12} sm={4} md={3}>
+          <Grid item xs={12} sm={6} md={3}>
             <AppBar
               className={classes.appBarSearch}
-              color="inherit"
               position="static"
+              color="inherit"
             >
               <TextField
+                onKeyDown={handleKeyPress}
                 name="search"
                 variant="outlined"
                 label="Search Memories"
                 fullWidth
                 value={search}
-                onKeyPress={handleKeyPress}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                }}
+                onChange={(e) => setSearch(e.target.value)}
               />
               <ChipInput
                 style={{ margin: "10px 0" }}
-                variant="outlined"
                 value={tags}
-                onAdd={(chip) => handleAdd(chip)}
-                onDelete={(chip) => handleDelete(chip)}
+                onAdd={(chip) => handleAddChip(chip)}
+                onDelete={(chip) => handleDeleteChip(chip)}
                 label="Search Tags"
+                variant="outlined"
               />
               <Button
-                color="primary"
-                className={classes.searchButton}
                 onClick={searchPost}
+                className={classes.searchButton}
                 variant="contained"
+                color="primary"
               >
                 Search
               </Button>
             </AppBar>
-            <Form setCurrentId={setCurrentId} currentId={currentId} />
+            <Form currentId={currentId} setCurrentId={setCurrentId} />
             {!searchQuery && !tags.length && (
-              <Paper elevation={6} className={classes.pagination}>
-                <Paginate page={page} />
+              <Paper className={classes.pagination} elevation={6}>
+                <Pagination page={page} />
               </Paper>
             )}
           </Grid>

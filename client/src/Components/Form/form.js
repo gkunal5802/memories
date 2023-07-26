@@ -1,65 +1,76 @@
 import React, { useState, useEffect } from "react";
-import { Typography, TextField, Button, Paper } from "@material-ui/core";
-import FileBase from "react-file-base64";
+import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import useStyles from "./styles";
+import FileBase from "react-file-base64";
 import { useHistory } from "react-router-dom";
+import ChipInput from "material-ui-chip-input";
 
 import { createPost, updatePost } from "../../actions/posts";
+import useStyles from "./styles";
 
 const Form = ({ currentId, setCurrentId }) => {
   const [postData, setPostData] = useState({
-    tags: "",
-    message: "",
     title: "",
+    message: "",
+    tags: [],
     selectedFile: "",
   });
-
-  const dispatch = useDispatch();
-  const history = useHistory();
   const post = useSelector((state) =>
-    currentId ? state.posts.posts.find((p) => p._id === currentId) : null
+    currentId
+      ? state.posts.posts.find((message) => message._id === currentId)
+      : null
   );
-
+  const dispatch = useDispatch();
+  const classes = useStyles();
   const user = JSON.parse(localStorage.getItem("profile"));
+  const history = useHistory();
+
+  const clear = () => {
+    setCurrentId(0);
+    setPostData({ title: "", message: "", tags: [], selectedFile: "" });
+  };
 
   useEffect(() => {
+    if (!post?.title) clear();
     if (post) setPostData(post);
+    // eslint-disable-next-line
   }, [post]);
-  const classes = useStyles();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (currentId) {
+
+    if (currentId === 0) {
+      dispatch(createPost({ ...postData, name: user?.result?.name }, history));
+      clear();
+    } else {
       dispatch(
         updatePost(currentId, { ...postData, name: user?.result?.name })
       );
-      clear();
-    } else {
-      dispatch(createPost({ ...postData, name: user?.result?.name }, history));
       clear();
     }
   };
 
   if (!user?.result?.name) {
     return (
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} elevation={6}>
         <Typography variant="h6" align="center">
-          Sign In to create your own memories & like other's memories.
+          Please Sign In to create your own memories and like other's memories.
         </Typography>
       </Paper>
     );
   }
 
-  const clear = () => {
-    setCurrentId(0);
+  const handleAddChip = (tag) => {
+    setPostData({ ...postData, tags: [...postData.tags, tag] });
+  };
+
+  const handleDeleteChip = (chipToDelete) => {
     setPostData({
-      tags: "",
-      message: "",
-      title: "",
-      selectedFile: "",
+      ...postData,
+      tags: postData.tags.filter((tag) => tag !== chipToDelete),
     });
   };
+
   return (
     <Paper className={classes.paper} elevation={6}>
       <form
@@ -69,36 +80,39 @@ const Form = ({ currentId, setCurrentId }) => {
         onSubmit={handleSubmit}
       >
         <Typography variant="h6">
-          {currentId ? "Editing" : "Creating"} a Memory
+          {currentId ? `Editing "${post?.title}"` : "Creating a Memory"}
         </Typography>
         <TextField
-          variant="outlined"
           name="title"
+          variant="outlined"
           label="Title"
           fullWidth
           value={postData.title}
           onChange={(e) => setPostData({ ...postData, title: e.target.value })}
-        ></TextField>
+        />
         <TextField
-          variant="outlined"
           name="message"
+          variant="outlined"
           label="Message"
           fullWidth
+          multiline
+          minRows={4}
           value={postData.message}
           onChange={(e) =>
             setPostData({ ...postData, message: e.target.value })
           }
-        ></TextField>
-        <TextField
-          variant="outlined"
-          name="tags"
-          label="Tags"
-          fullWidth
-          value={postData.tags}
-          onChange={(e) =>
-            setPostData({ ...postData, tags: e.target.value.split(",") })
-          }
-        ></TextField>
+        />
+        <div style={{ padding: "5px 0", width: "94%" }}>
+          <ChipInput
+            name="tags"
+            variant="outlined"
+            label="Tags"
+            fullWidth
+            value={postData.tags}
+            onAdd={(chip) => handleAddChip(chip)}
+            onDelete={(chip) => handleDeleteChip(chip)}
+          />
+        </div>
         <div className={classes.fileInput}>
           <FileBase
             type="file"
@@ -112,8 +126,8 @@ const Form = ({ currentId, setCurrentId }) => {
           className={classes.buttonSubmit}
           variant="contained"
           color="primary"
-          type="submit"
           size="large"
+          type="submit"
           fullWidth
         >
           Submit
@@ -121,8 +135,8 @@ const Form = ({ currentId, setCurrentId }) => {
         <Button
           variant="contained"
           color="secondary"
-          onClick={clear}
           size="small"
+          onClick={clear}
           fullWidth
         >
           Clear

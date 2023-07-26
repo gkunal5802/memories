@@ -1,28 +1,25 @@
-import * as api from "../api/index";
-import { AUTH } from "../constants/actionTypes";
+import { AUTH } from '../constants/actionTypes';
+import * as api from '../api/index.js';
 
-export const signup = (formData, history) => async (dispatch) => {
+export const signin = (formData, router) => async (dispatch) => {
   try {
-    // sign up the user
-    const { data } = await api.signUp(formData);
-
-    console.log("actions/auth \n", data);
+    const { data } = await api.signIn(formData);
 
     dispatch({ type: AUTH, data });
 
-    history.push("/");
+    router.push('/');
   } catch (error) {
     console.log(error);
   }
 };
 
-export const signin = (formData, history) => async (dispatch) => {
+export const signup = (formData, router) => async (dispatch) => {
   try {
-    // log in the user
-    const { data } = await api.signIn(formData);
+    const { data } = await api.signUp(formData);
+
     dispatch({ type: AUTH, data });
 
-    history.push("/");
+    router.push('/');
   } catch (error) {
     console.log(error);
   }
